@@ -1,0 +1,3 @@
+#!/usr/bin/env node
+
+var producer = require('../modules/messaging/amqpProducer');

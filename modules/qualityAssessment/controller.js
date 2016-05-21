@@ -8,19 +8,21 @@ class QualityEstimator {
      * @param situation
      */
     calcQuality(situation) {
-        let strategyName = situation.meta.strategy;
-        let strategy = this.resolveStrategy(strategyName);
-        console.log(strategy);
-        return strategy.getQuality(situation);
+        if(situation === undefined || situation.meta === undefined) {
+            throw "situation must have QA meta data";
+        }
+        let strategy = this.instantiateStrategy(situation);
+        return strategy.getQuality();
         
     }
     
-    resolveStrategy(strategyName) {
-        let s = strategies[strategyName];
-        if(s === null) {
+    instantiateStrategy(situation) {
+        let strategyName = situation.meta.strategy;
+        let Strategy = strategies[strategyName];
+        if(Strategy === undefined) {
             throw 'no such strategy: ' + strategyName;
         }
-        return new s();
+        return new Strategy(situation);
     }
 }
 

@@ -2,10 +2,6 @@
 
 class AssessmentStrategy {
 
-    constructor() {
-
-    }
-
     getQuality(situation) {
         throw "not implemented";
     }
@@ -26,21 +22,42 @@ class NoOpStrategy extends AssessmentStrategy {
 class WeightedAverageStrategy extends AssessmentStrategy {
 
     // TODO: allow options to use max, min, all, only trues, ...
-    constructor(weights) {
+    constructor(situation, weights) {
         super();
+        this.situation = situation;
         this.weights = weights || {};
     }
 
-    getQuality(situation) {
-        let sum = 0;
-        situation.children.items.forEach(item => {
-            console.log(item);
-            sum += item.context.quality;
+    /**
+     * Calculates the quality by averaging all conditions of a situation which have evaluated to true.
+     * When the operation is XOR or AND, then all conditions have to be taken into account.
+     *
+     * @returns {number} the average quality
+     */
+    getQuality() {
+        let scoreSum = 0;
+        let divisor = 0;
+        this.situation.children.items.forEach(condition => {
+            if(condition.fulfilled) {
+                scoreSum += condition.context.quality * this._getWeight(condition.name);
+                divisor += this._getWeight(condition.name);
+            }
         });
-        let quality = sum / situation.children.items.length;
+        console.log("dividing " + scoreSum + " by " + divisor);
+        let quality = scoreSum / divisor;
         return quality;
     }
 
+    /**
+     * Returns a weight if one is specified. Defaults to 1 if non eis specified.
+     *
+     * @param conditionName
+     * @returns {*|number}
+     * @private
+     */
+    _getWeight(conditionName) {
+        return this.weights[conditionName] || 1;
+    }
 }
 
 module.exports = {

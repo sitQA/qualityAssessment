@@ -28,7 +28,7 @@ let condition2 = {
         'quality' : 0.65,
         'timestamp': 876786
     },
-    fulfilled: false
+    fulfilled: true
 };
 
 
@@ -62,19 +62,4 @@ describe('Situation', () => {
     it('should convert timestamps to date objects', () => {
         situation.timeDetected.should.be.a('date');
     });
-});
-
-
-describe('QualityEstimator', () => {
-
-    let qe = new QualityEstimator();
-    let score = qe.calcQuality(situation);
-    it('should calculate quality', () => {
-        score.should.be.a('number');
-    });
-
-    it('quality should be the average of both conditions', ()=> {
-        expect(score).to.equal((0.65 + 0.7)/2)
-    });
-
 });
