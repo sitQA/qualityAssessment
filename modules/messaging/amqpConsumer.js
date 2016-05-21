@@ -1,17 +1,31 @@
+'use strict';
 var amqp = require('amqplib/callback_api');
 var conf = require('../configuration/conf');
 
 
-amqp.connect(conf.get('amqp.url'), function(err, conn) {
-    conn.createChannel(function(err, ch) {
-        var q = conf.get('amqp.sitQueue');
+/**
+ *
+ * @param onConnect callback to be invoked when the connection has been established
+ * @param onMsgReceived callback to be invoked with a msg object when a message has been received
+ */
+let listen = function(onConnect, onMsgReceived) {
+    amqp.connect(conf.get('amqp.url'), function(err, conn) {
+        onConnect();
+        conn.createChannel(function(err, ch) {
 
-        ch.assertQueue(q, {durable: true});
+            var q = conf.get('amqp.sitQueue');
+            ch.assertQueue(q, {durable: true});
 
-        ch.consume(q, function(msg) {
-            console.log(" [x] Received %s", msg.content.toString());
-            //TODO: let other modules register as listeners, invoke listeners when msg received
-            ch.ack(msg);
-        }, {noAck: false});
+            ch.consume(q, msg => {
+                onMsgReceived(msg);
+                ch.ack(msg);
+            }, {noAck: false});
+
+        });
     });
-});
+};
+
+module.exports = {
+    listen: listen
+};
+

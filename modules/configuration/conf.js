@@ -21,11 +21,11 @@ var conf = convict({
             default: "situations.raw",
             env: "AMQP_SIT_QUEUE"
         },
-        sitQAQueue: {
-            doc: "name opf the amqp channel where situations with quality annotations should be published",
-            fomrat: String,
-            default: "situations.qa",
-            env: "AMQP_SIT_QA_QUEUE"
+        sitExchange: {
+            doc: "name opf the amqp exchange where situations with quality annotations should be published (pub/sub style)",
+            format: String,
+            default: "situations",
+            env: "AMQP_SIT_EXCHANGE"
         }
     }
 });

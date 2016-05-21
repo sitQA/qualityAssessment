@@ -1,3 +1,7 @@
 #!/usr/bin/env node
-
+var situation = require('../test/testdata').andSit;
 var producer = require('../modules/messaging/amqpProducer');
+producer.connect((ch, q) => {
+    situation.meta.strategy = "weightedAvg";
+    ch.sendToQueue(q, new Buffer(JSON.stringify(situation)), {persistent: true});
+});

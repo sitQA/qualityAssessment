@@ -7,16 +7,16 @@ class QualityEstimator {
     /**
      * @param situation
      */
-    calcQuality(situation) {
+    static calcQuality(situation) {
         if(situation === undefined || situation.meta === undefined) {
             throw "situation must have QA meta data";
         }
-        let strategy = this.instantiateStrategy(situation);
+        let strategy = this._instantiateStrategy(situation);
         return strategy.getQuality();
         
     }
     
-    instantiateStrategy(situation) {
+    static _instantiateStrategy(situation) {
         let strategyName = situation.meta.strategy;
         let Strategy = strategies[strategyName];
         if(Strategy === undefined) {

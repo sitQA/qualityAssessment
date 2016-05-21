@@ -4,7 +4,7 @@ var chai = require('chai')
     , should = chai.should();
 
 var Situation = require('../modules/qualityAssessment/situation').Situation;
-var QualityEstimator = require('../modules/qualityAssessment/controller');
+var QualityEstimator = require('../modules/qualityAssessment/QualityEstimator');
 
 
 let condition1 = {
