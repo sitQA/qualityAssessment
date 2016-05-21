@@ -3,7 +3,7 @@ var chai = require('chai')
     , expect = chai.expect
     , should = chai.should();
 
-var Situation = require('../modules/qualityAssessment/situation');
+var Situation = require('../modules/qualityAssessment/situation').Situation;
 var QualityEstimator = require('../modules/qualityAssessment/controller');
 
 

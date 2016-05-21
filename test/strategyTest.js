@@ -1,17 +1,49 @@
+'use strict';
+var chai = require('chai')
+    , expect = chai.expect
+    , should = chai.should();
+let WeightedAvgStrategy = require('../modules/qualityAssessment/strategies').weightedAvg;
+
+let orSit = require('./testdata').orSit;
+let andSit = require('./testdata').andSit;
+let xorSit = require('./testdata').xorSit;
+
+
 describe('WeightedAverageStrategy', () => {
 
-    let qe = new QualityEstimator();
-    let score = qe.calcQuality(situation);
-    it('should calculate quality', () => {
-        score.should.be.a('number');
+    describe('OR Situation', () => {
+        let avgStrategy = new WeightedAvgStrategy(orSit);
+        let score = avgStrategy.getQuality();
+
+        it('should calculate quality', () => {
+            score.should.be.a('number');
+        });
+
+        it('quality should be max of true conditions', () => {
+            expect(score).to.equal(0.7);
+        });
+
     });
 
-    it('quality should be the arithmetic average of both conditions if no weights are specified', ()=> {
-        expect(score).to.equal((0.65 + 0.7)/2)
+    describe('AND Situation', () => {
+        let avgStrategy = new WeightedAvgStrategy(andSit);
+        let score = avgStrategy.getQuality();
+
+        it('should calculate quality', () => {
+            score.should.be.a('number');
+        });
+
+        it('should be the average of all conditions', ()=> {
+            expect(score).to.equal((0.7+0.5)/2);
+        });
+
     });
 
-    it('should use weights if they are specified', () => {
-        expect(score)
-    })
+    describe('XOR Situation', () => {
+        let avgStrategy = new WeightedAvgStrategy(xorSit);
+
+    });
+
+
 
 });

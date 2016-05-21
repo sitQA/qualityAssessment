@@ -15,7 +15,7 @@ class Situation {
     constructor(opt) {
         this.id = opt.id;
         this.children = opt.children;
-        this.timeDetected = new Date(opt.timeDetected);
+        this.timeDetected = opt.timeDetcted instanceof Date ? opt.timeDetected : new Date(opt.timeDetected);
         this.children = opt.children || {};
         this.meta = opt.meta || new Meta();
         this.initChildren();
@@ -27,7 +27,13 @@ class Situation {
             conditions.push(new Condition(item));
         });
         this.children.items = conditions;
+    }
 
+    addChild(condition) {
+        if(!condition instanceof Condition) {
+            condition = new Condition(condition);
+        }
+        this.children.items.push(condition);
     }
 
     getQuality() {
@@ -72,6 +78,14 @@ class Operation {
  */
 class Condition {
 
+    /**
+     *
+     * @param opt.name name of the condition
+     * @param opt.operator one of lowerThan, greaterThan, equals, notEquals, between, average, min, max
+     * @param opt.value the value or values (in case of between or average)
+     * @param opt.context the context object on which the condition was tested
+     * @param opt.fulfilled whether or not the condition was satisfied
+     */
     constructor(opt) {
         this.name = opt.name || 'unnamed';
         this.operator = Condition.types()[opt.operator];
@@ -101,4 +115,9 @@ class Condition {
     }
 }
 
-module.exports = Situation;
+module.exports = {
+    Situation: Situation,
+    Condition: Condition,
+    Operation: Operation,
+    Meta: Meta
+};

@@ -32,7 +32,12 @@ var conf = convict({
 
 // Load environment dependent configuration
 var env = conf.get('env');
-conf.loadFile('./config/' + env + '.json');
+try {
+    conf.loadFile('./config/' + env + '.json');
+} catch(e) {
+    // no config file present, will use defaults
+}
+
 
 // Perform validation
 conf.validate({strict: true});
