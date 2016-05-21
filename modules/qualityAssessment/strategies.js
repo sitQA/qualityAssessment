@@ -1,17 +1,26 @@
 'use strict';
 
+/**
+ * Base class for all available assessment strategies.
+ * Subclasses should override the #getQuality() method.
+ */
 class AssessmentStrategy {
 
-    getQuality(situation) {
+    constructor(situation) {
+        this.situation = situation;
+    }
+
+    getQuality() {
         throw "not implemented";
     }
 
 }
 
+
 class NoOpStrategy extends AssessmentStrategy {
 
     getQuality(situation) {
-        return 1;
+        return null;
     }
 }
 
@@ -21,10 +30,8 @@ class NoOpStrategy extends AssessmentStrategy {
  */
 class WeightedAverageStrategy extends AssessmentStrategy {
 
-    // TODO: allow options to use max, min, all, only trues, ...
     constructor(situation, weights) {
-        super();
-        this.situation = situation;
+        super(situation);
         this.weights = weights || {};
     }
 
@@ -35,17 +42,32 @@ class WeightedAverageStrategy extends AssessmentStrategy {
      * @returns {number} the average quality
      */
     getQuality() {
+        if(this.situation.children.operation === 'or') {
+            return this.getMaxQuality();
+        } else {
+            return this.getAverage();
+        }
+    }
+
+    getAverage() {
         let scoreSum = 0;
         let divisor = 0;
         this.situation.children.items.forEach(condition => {
-            if(condition.fulfilled) {
-                scoreSum += condition.context.quality * this._getWeight(condition.name);
-                divisor += this._getWeight(condition.name);
-            }
+            scoreSum += condition.context.quality * this._getWeight(condition.name);
+            divisor += this._getWeight(condition.name);
         });
-        console.log("dividing " + scoreSum + " by " + divisor);
         let quality = scoreSum / divisor;
         return quality;
+    }
+
+    getMaxQuality() {
+        let maxQ = 0;
+        this.situation.children.items.forEach(condition => {
+            if(condition.fulfilled && condition.context.quality > maxQ) {
+                maxQ = condition.context.quality;
+            }
+        });
+        return maxQ;
     }
 
     /**
@@ -60,9 +82,40 @@ class WeightedAverageStrategy extends AssessmentStrategy {
     }
 }
 
+/**
+ * Strategy which uses the lowest quality score among the situation's children.
+ * The situation quality is assumed to be only as high as its most uncertain member.
+ */
+class PessimisticStrategy extends AssessmentStrategy {
+
+    constructor(situation) {
+        super(situation);
+    }
+
+    getQuality() {
+        return this.getMinQuality();
+    }
+
+    getMinQuality() {
+        let minQ = 1;
+        this.situation.children.items.forEach(condition => {
+            if(!this._skipCondition(condition) && condition.context.quality < minQ) {
+                minQ = condition.context.quality;
+            }
+        });
+        return minQ;
+    }
+
+    _skipCondition(condition) {
+        return this.situation.children.operation === 'or' && !condition.fulfilled;
+    }
+
+}
+
 module.exports = {
     'noOp': NoOpStrategy,
-    'weightedAvg': WeightedAverageStrategy
+    'weightedAvg': WeightedAverageStrategy,
+    'pessimistic': PessimisticStrategy
 };
 
 

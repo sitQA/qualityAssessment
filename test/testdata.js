@@ -38,6 +38,18 @@ let greaterFalseCondition = {
     fulfilled: false
 };
 
+let falseCondition = {
+    name : 'free slots',
+    operator: 'greaterThan',
+    value: '10',
+    context: {
+        'freeSlots' : 4,
+        'quality' : 0.1,
+        'timestamp': 876786
+    },
+    fulfilled: false
+};
+
 let situationWithAnd = new Situation({
     children: {operation: 'and', items: [maxCondition, equalsCondition]},
     name: 'situationWithAnd',
@@ -46,7 +58,7 @@ let situationWithAnd = new Situation({
 });
 
 let situationWithOr = new Situation({
-    children: {operation: 'or', items: [maxCondition, equalsCondition, greaterFalseCondition]},
+    children: {operation: 'or', items: [maxCondition, equalsCondition, greaterFalseCondition, falseCondition]},
     name: 'situationWithAnd',
     id: 'situationWithAnd',
     timeDetected: new Date()
