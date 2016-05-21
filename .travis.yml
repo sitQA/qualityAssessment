@@ -7,3 +7,8 @@ before_install:
   - sudo apt-get -qq update
   - sudo apt-get install rabbitmq-server
 
+services:
+  - rabbitmq
+
+sudo: required
+
