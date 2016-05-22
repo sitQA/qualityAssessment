@@ -22,7 +22,7 @@ situation messages.
 ## Configuration
 The module can be configured with environment variables or by providing a json file.
 Different settings can be used for development and production mode by specifying configuration files.
-The configuration file must be placed in `conf/<environment>.json`, where environment is one of 
+The configuration file must be placed in `config/<environment>.json`, where environment is one of 
 `development` (default), `production` or `test`.  
 The application environment is loaded from the `NODE_ENV` variable.
 
