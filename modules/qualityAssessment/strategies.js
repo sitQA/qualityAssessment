@@ -19,7 +19,7 @@ class AssessmentStrategy {
 
 class NoOpStrategy extends AssessmentStrategy {
 
-    getQuality(situation) {
+    getQuality() {
         return null;
     }
 }
@@ -56,8 +56,7 @@ class WeightedAverageStrategy extends AssessmentStrategy {
             scoreSum += condition.context.quality * this._getWeight(condition.name);
             divisor += this._getWeight(condition.name);
         });
-        let quality = scoreSum / divisor;
-        return quality;
+        return scoreSum / divisor;
     }
 
     getMaxQuality() {
