@@ -13,6 +13,9 @@ situation recognition from an AMQP queue and annotates them with quality context
 Annotated situations are published via an AMQP exchange so that multiple subscribers can can consume annotated
 situation messages.
 
+![data flow](data-flow-amqp.png)
+
+
 ## Installation
 - install Node.js 4 or 5 (installation via [NVM](https://github.com/creationix/nvm) recommended)
 - install [RabbitMQ](https://www.rabbitmq.com/)
