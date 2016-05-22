@@ -3,10 +3,6 @@ node_js:
   - "5"
   - "4"
 
-before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install rabbitmq-server
-
 services:
   - rabbitmq
 
