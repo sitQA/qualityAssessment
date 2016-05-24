@@ -1,6 +1,6 @@
 # Situation Quality Assessment for SitOpt
 
-[![Build Status](https://travis-ci.org/sitQA/qualityAssessment.svg?branch=master)](https://travis-ci.org/sitQA/qualityAssessment)
+[![Build Status](https://travis-ci.org/sitQA/situation-quality-assessment.svg?branch=master)](https://travis-ci.org/sitQA/situation-quality-assessment)
 
 Situations are basically complex events which are detected by aggregating context information from various sources.
 The quality of a situation can be determined with different strategies
