@@ -13,7 +13,7 @@ var conf = convict({
             doc: "The amqp connection URL for the AMQP broker to use.",
             format: String,
             default: "amqp://localhost",
-            env: "AMQP_URL",
+            env: "AMQP_URL"
         },
         sitQueue: {
             doc: "name of the amqp queue where unannotated situations are published",
@@ -22,7 +22,7 @@ var conf = convict({
             env: "AMQP_SIT_QUEUE"
         },
         sitExchange: {
-            doc: "name opf the amqp exchange where situations with quality annotations should be published (pub/sub style)",
+            doc: "name of the amqp exchange where situations with quality annotations should be published (pub/sub style)",
             format: String,
             default: "situations",
             env: "AMQP_SIT_EXCHANGE"

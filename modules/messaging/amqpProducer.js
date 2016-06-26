@@ -11,10 +11,9 @@ let connect = function(onConnect) {
     amqp.connect(conf.get('amqp.url'), function(err, conn) {
         conn.createChannel(function(err, ch) {
             var exchange = conf.get('amqp.sitExchange');
-            ch.assertExchange(exchange, 'fanout', {durable: false});
-            let publish = function(msg) {
-                ch.publish(exchange, '', new Buffer(msg));
-                console.log("published message");
+            ch.assertExchange(exchange, 'direct', {durable: false});
+            let publish = function(msg, key) {
+                ch.publish(exchange, key, new Buffer(msg));
             };
             onConnect(publish);
         });

@@ -4,18 +4,17 @@ var NoOpStrategy = require('./strategies').noOp;
 
 class Situation {
     /**
-     *
      * @param opt properties
      * @param opt.id id of the situation template
      * @param opt.name name of the situation
-     * @param timeDetcted timestamp of th edetection time
+     * @param opt.objectId object which is affected by the situation
      * @param children children of the situation
      * @param meta information to describe how quality should be assessed
      */
     constructor(opt) {
         this.id = opt.id;
+        this.objectId = opt.objectId;
         this.children = opt.children;
-        this.timeDetected = opt.timeDetcted instanceof Date ? opt.timeDetected : new Date(opt.timeDetected);
         this.children = opt.children || {};
         this.meta = opt.meta || new Meta();
         this.initChildren();

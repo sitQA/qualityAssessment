@@ -7,11 +7,12 @@ var amqpProducer = require('./modules/messaging/amqpProducer');
 var QualityEstimator = require('./modules/qualityAssessment/QualityEstimator');
 
 var handleMsg = function(msg, publish) {
-    console.log("received msg " + msg.content.toString());
+    console.log("received situation msg");
     try{
         let situation = new Situation(JSON.parse(msg.content));
         situation.quality = QualityEstimator.calcQuality(situation);
-        publish(new Buffer(JSON.stringify(situation)));
+        console.log("situation quality: " + situation.quality + " id: " + situation.id);
+        publish(new Buffer(JSON.stringify(situation)), situation.id);
     } catch(e) {
         console.log(e);
     }
