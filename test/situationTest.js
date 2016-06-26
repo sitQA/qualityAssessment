@@ -58,8 +58,4 @@ describe('Situation', () => {
         expect(situation.meta).to.equal(exampleSituation.meta);
         expect(situation.children.items.length).to.equal(exampleSituation.children.items.length);
     });
-
-    it('should convert timestamps to date objects', () => {
-        situation.timeDetected.should.be.a('date');
-    });
 });
