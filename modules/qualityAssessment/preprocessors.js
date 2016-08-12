@@ -1,4 +1,6 @@
+'use strict';
 
+const ops = require('./situation').Condition.types();
 
 /**
  * Base class for all available preprocessor strategies.
@@ -32,21 +34,41 @@ class ConfidenceIntervalPreprocessor extends PreprocessorStrategy {
     }
 
     _updateQuality() {
-        if(this.done) {
+        if (this.done) {
             return; //make method indempotent
         }
         this.situation.children.items.forEach(condition => {
-            if(!this._strategyApplicable(condition)) {
-                // TODO: update quality
+            if (this._strategyApplicable(condition)) {
+                let start = condition.meta.range[0];
+                let end = condition.meta.range[1];
+                let threshold = condition.value;
+                // get range, calculate distance to threshold as percent value and increase confidence accordingly
+                let value = condition.context.value;
+                let relativeDistance = Math.abs((threshold - value) / (end - start));
+                console.log("relative distance is " + relativeDistance);
+
+                let q;
+                if(relativeDistance <= 0.05) {
+                    q = condition.context.quality * (0.9 - relativeDistance);
+                } else {
+                    q = condition.context.quality * (1 + relativeDistance);
+                }
+                if (q > 1) {
+                    q = 1;
+                }
+                condition.context.quality = q;
             }
         });
         this.done = true;
     }
 
     _strategyApplicable(condition) {
-        //TODO: check if condition is using a number range check
-        // and check if required meta data are present
-        return false;
+        let validOperators = [ops.greaterThan, ops.lowerThan, ops.max, ops.min];
+        console.log("has meta? " + (condition.meta.range !== undefined));
+        console.log("is array? " + (condition.meta.range instanceof Array));
+        console.log(condition.operator + " is a valid operator? " + (validOperators.indexOf(condition.operator) >= 0));
+        return condition.meta.range !== undefined && condition.meta.range instanceof Array && validOperators.indexOf(condition.operator) >= 0;
+
     }
 
     getSituation() {
@@ -54,3 +76,7 @@ class ConfidenceIntervalPreprocessor extends PreprocessorStrategy {
         return this.situation;
     }
 }
+
+module.exports = {
+    'confidenceInterval': ConfidenceIntervalPreprocessor
+};

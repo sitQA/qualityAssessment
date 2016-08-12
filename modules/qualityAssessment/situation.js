@@ -84,6 +84,7 @@ class Condition {
      * @param opt.value the value or values (in case of between or average)
      * @param opt.context the context object on which the condition was tested
      * @param opt.fulfilled whether or not the condition was satisfied
+     * @param opt.meta dictionary with optional meta data, such as range or name of the value field in the context
      */
     constructor(opt) {
         this.name = opt.name || 'unnamed';
@@ -91,6 +92,7 @@ class Condition {
         this.value = opt.value;
         this.context = opt.context;
         this.fulfilled = opt.fulfilled;
+        this.meta = opt.meta || {};
     }
 
     static types() {
