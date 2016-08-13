@@ -1,6 +1,7 @@
 'use strict';
 
-let strategies = require('./strategies');
+const strategies = require('./strategies');
+const preprocessors = require('./preprocessors');
 
 class QualityEstimator {
 
@@ -11,9 +12,14 @@ class QualityEstimator {
         if(situation === undefined || situation.meta === undefined) {
             throw "situation must have QA meta data";
         }
+        try {
+            let preprocessor = this._instantiatePreprocessor(situation);
+            situation = preprocessor.getSituation();
+        } catch(e) {
+            console.log("no preprocessor is used");
+        }
         let strategy = this._instantiateStrategy(situation);
         return strategy.getQuality();
-        
     }
     
     static _instantiateStrategy(situation) {
@@ -23,6 +29,15 @@ class QualityEstimator {
             throw 'no such strategy: ' + strategyName;
         }
         return new Strategy(situation);
+    }
+
+    static _instantiatePreprocessor(situation) {
+        let processorName = situation.meta.preprocessor;
+        let Preprocessor = preprocessors[processorName];
+        if(Preprocessor === undefined) {
+            throw 'no such preprocessor: ' + processorName;
+        }
+        return new Preprocessor(situation);
     }
 }
 

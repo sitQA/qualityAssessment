@@ -8,8 +8,13 @@ var conf = require('../modules/configuration/conf');
 var situation = require('./testdata').andSit;
 
 situation.meta.strategy = "weightedAvg";
+situation.meta.preprocessor = "confidenceInterval";
 situation.meta.timeDetected = new Date().getTime();
+situation.children.items[0].meta.range = [0,100];
+situation.children.items[0].meta.valueKey = 'freeMem';
 var msg = new Buffer(JSON.stringify(situation));
+
+console.log(JSON.stringify(situation));
 
 
 describe('AMQP Integration', () => {

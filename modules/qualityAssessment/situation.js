@@ -80,7 +80,7 @@ class Condition {
     /**
      *
      * @param opt.name name of the condition
-     * @param opt.operator one of lowerThan, greaterThan, equals, notEquals, between, average, min, max
+     * @param opt.operator one of lowerThan, greaterThan, equals, notEquals, between, average, min, max (or equivalent symbols <, >, ===, !==, ...)
      * @param opt.value the value or values (in case of between or average)
      * @param opt.context the context object on which the condition was tested
      * @param opt.fulfilled whether or not the condition was satisfied
@@ -88,7 +88,7 @@ class Condition {
      */
     constructor(opt) {
         this.name = opt.name || 'unnamed';
-        this.operator = Condition.types()[opt.operator];
+        this.operator = Condition.types()[opt.operator] || opt.operator;
         this.value = opt.value;
         this.context = opt.context;
         this.fulfilled = opt.fulfilled;

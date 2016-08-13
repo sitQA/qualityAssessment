@@ -25,6 +25,10 @@ class PreprocessorStrategy {
  * A preprocessing strategy which is applied on all conditions of a situation that use
  * comparison operators that work on a numeric interval.
  * Conditions are skipped if required meta data (expected value ranges) are missing.
+ *
+ * Children/condition objects must have a meta.range and meta.valueKey specified. valueKey should be a string with the
+ * name of the key that is to be read from the context object.
+ *
  */
 class ConfidenceIntervalPreprocessor extends PreprocessorStrategy {
 
@@ -41,9 +45,10 @@ class ConfidenceIntervalPreprocessor extends PreprocessorStrategy {
             if (this._strategyApplicable(condition)) {
                 let start = condition.meta.range[0];
                 let end = condition.meta.range[1];
+                let valueKey = condition.meta.valueKey || "value";
                 let threshold = condition.value;
                 // get range, calculate distance to threshold as percent value and increase confidence accordingly
-                let value = condition.context.value;
+                let value = condition.context[valueKey];
                 let relativeDistance = Math.abs((threshold - value) / (end - start));
                 console.log("relative distance is " + relativeDistance);
 
@@ -57,16 +62,17 @@ class ConfidenceIntervalPreprocessor extends PreprocessorStrategy {
                     q = 1;
                 }
                 condition.context.quality = q;
+            } else {
+                console.log("strategy not applicable.");
             }
         });
         this.done = true;
     }
 
     _strategyApplicable(condition) {
+        console.log("condition.meta.range " + condition.meta.range);
+        console.log("condition.operator " + condition.operator);
         let validOperators = [ops.greaterThan, ops.lowerThan, ops.max, ops.min];
-        console.log("has meta? " + (condition.meta.range !== undefined));
-        console.log("is array? " + (condition.meta.range instanceof Array));
-        console.log(condition.operator + " is a valid operator? " + (validOperators.indexOf(condition.operator) >= 0));
         return condition.meta.range !== undefined && condition.meta.range instanceof Array && validOperators.indexOf(condition.operator) >= 0;
 
     }
